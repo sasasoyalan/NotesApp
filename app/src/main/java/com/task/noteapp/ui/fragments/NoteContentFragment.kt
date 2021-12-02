@@ -41,6 +41,7 @@ import com.task.noteapp.utils.*
 import com.task.noteapp.viewmodel.NoteActivityViewModel
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.transition.MaterialContainerTransform
 import kotlinx.coroutines.*
 import java.io.File
@@ -61,6 +62,7 @@ class NoteContentFragment : Fragment(R.layout.fragment_note_content) {
     private val SELECT_IMAGE_FROM_STORAGE = 101
     private val job = CoroutineScope(Dispatchers.Main)
     private val args: NoteContentFragmentArgs by navArgs()
+    private var lastNoteChanged: Boolean =false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -69,7 +71,7 @@ class NoteContentFragment : Fragment(R.layout.fragment_note_content) {
             drawingViewId = R.id.fragment
             scrimColor = Color.TRANSPARENT
             duration = 300L
-            setAllContainerColors(requireContext().themeColor(R.attr.colorSurface))
+           // setAllContainerColors(requireContext().themeColor(R.attr.colorSurface))
         }
         sharedElementEnterTransition = animation
         sharedElementReturnTransition = animation
@@ -238,6 +240,28 @@ class NoteContentFragment : Fragment(R.layout.fragment_note_content) {
             )
 
         } else {
+            if (contentBinding.etTitle.text.toString().isEmpty()){
+                result = "Title is required!"
+                CoroutineScope(Dispatchers.Main).launch {
+                    view?.let {
+                        Snackbar.make(it, result, Snackbar.LENGTH_SHORT).apply {
+                            animationMode = Snackbar.ANIMATION_MODE_FADE
+                        }.show()
+                    }
+                }
+                return
+            }
+            if (contentBinding.etNoteContent.text.toString().isEmpty()){
+                result = "Content is required!"
+                CoroutineScope(Dispatchers.Main).launch {
+                    view?.let {
+                        Snackbar.make(it, result, Snackbar.LENGTH_SHORT).apply {
+                            animationMode = Snackbar.ANIMATION_MODE_FADE
+                        }.show()
+                    }
+                }
+                return
+            }
             note = args.note
             when (note) {
                 null -> {
@@ -247,6 +271,7 @@ class NoteContentFragment : Fragment(R.layout.fragment_note_content) {
                             contentBinding.etTitle.text.toString(),
                             contentBinding.etNoteContent.getMD(),
                             currentDate,
+                            "",
                             color,
                             noteActivityViewModel.setImagePath(),
                             false
@@ -278,10 +303,11 @@ class NoteContentFragment : Fragment(R.layout.fragment_note_content) {
                     note!!.id,
                     contentBinding.etTitle.text.toString(),
                     contentBinding.etNoteContent.getMD(),
+                    note!!.date,
                     currentDate,
                     color,
                     noteActivityViewModel.setImagePath(),
-                    true
+                    contentBinding.etNoteContent.getMD()!=note!!.content
                 )
             )
         }
@@ -330,7 +356,12 @@ class NoteContentFragment : Fragment(R.layout.fragment_note_content) {
         if (note != null) {
             title.setText(note.title)
             content.renderMD(note.content)
-            lastEdited.text = getString(R.string.created_on, note.date) +"\n"+ getString(R.string.edited_on, SimpleDateFormat.getDateInstance().format(Date()))
+            if (note.edited!=""){
+                lastEdited.text = getString(R.string.created_on, note.date) +"\n"+ getString(R.string.edited_on, SimpleDateFormat.getDateInstance().format(Date()))
+            }else {
+                lastEdited.text = getString(R.string.created_on, note.date)
+            }
+
             color = note.color
             if (savedImage != null) setImage(savedImage)
             else noteActivityViewModel.saveImagePath(note.imagePath)

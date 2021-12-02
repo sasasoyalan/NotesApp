@@ -11,6 +11,7 @@ data class Note(
     val title: String,
     val content: String,
     val date: String,
+    val edited : String,
     val color: Int = -1,
     val imagePath: String?,
     val isEdited : Boolean = false
