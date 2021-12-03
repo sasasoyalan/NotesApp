@@ -10,8 +10,10 @@ import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
+import android.text.Editable
 import android.text.Spannable
 import android.text.SpannableString
+import android.text.TextWatcher
 import android.text.style.ImageSpan
 import android.util.Log
 import android.view.ContextMenu
@@ -103,10 +105,62 @@ class NoteContentFragment : Fragment(R.layout.fragment_note_content) {
             contentBinding.etNoteContent.setOnFocusChangeListener { _, hasFocus ->
                 if (hasFocus) {
                     contentBinding.bottomBar.visibility = View.VISIBLE
-                    contentBinding.etNoteContent.setStylesBar(contentBinding.styleBar)
+                   // contentBinding.etNoteContent.setStylesBar(contentBinding.styleBar)
                 } else contentBinding.bottomBar.visibility = View.GONE
             }
         } catch (e: Throwable) {
+            Log.d("TAG", e.stackTraceToString())
+        }
+
+        try {
+            contentBinding.etNoteContent.addTextChangedListener(object : TextWatcher {
+
+                override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+                }
+                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                    if (args.note!=null){
+                        if (args.note!!.content!=contentBinding.etNoteContent.text.toString() || args.note!!.title!=contentBinding.etTitle.text.toString()){
+                            contentBinding.backBtn.setImageResource(R.drawable.ic_baseline_check_24)
+                        }else
+                            contentBinding.backBtn.setImageResource(R.drawable.ic_round_arrow_back_24)
+                    } else {
+                        if (contentBinding.etNoteContent.text.toString().isNotEmpty()||contentBinding.etTitle.text.toString().isNotEmpty()){
+                            contentBinding.backBtn.setImageResource(R.drawable.ic_baseline_check_24)
+                        }else
+                            contentBinding.backBtn.setImageResource(R.drawable.ic_round_arrow_back_24)
+                    }
+                }
+                override fun afterTextChanged(s: Editable?) {
+                    if (contentBinding.etNoteContent.layout.lineCount > 2){
+                        contentBinding.etNoteContent.text.delete(contentBinding.etNoteContent.text.length - 1, contentBinding.etNoteContent.text.length)
+                        Snackbar.make(view, getString(R.string.max_lenght_error), Snackbar.LENGTH_SHORT).apply {
+                            animationMode = Snackbar.ANIMATION_MODE_FADE
+                        }.show()
+                    }
+
+                }
+            })
+            contentBinding.etTitle.addTextChangedListener(object : TextWatcher {
+
+                override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+                }
+                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                    if (args.note!=null){
+                        if (args.note!!.title!=contentBinding.etTitle.text.toString()){
+                            contentBinding.backBtn.setImageResource(R.drawable.ic_baseline_check_24)
+                        }else
+                            contentBinding.backBtn.setImageResource(R.drawable.ic_round_arrow_back_24)
+                    } else {
+                        if (contentBinding.etTitle.text.toString().isNotEmpty()){
+                            contentBinding.backBtn.setImageResource(R.drawable.ic_baseline_check_24)
+                        }else
+                            contentBinding.backBtn.setImageResource(R.drawable.ic_round_arrow_back_24)
+                    }
+                }
+                override fun afterTextChanged(s: Editable?) {
+                }
+            })
+        }catch (e: Throwable) {
             Log.d("TAG", e.stackTraceToString())
         }
 
@@ -252,7 +306,7 @@ class NoteContentFragment : Fragment(R.layout.fragment_note_content) {
                 return
             }
             if (contentBinding.etNoteContent.text.toString().isEmpty()){
-                result = "Content is required!"
+                result = "Note is required!"
                 CoroutineScope(Dispatchers.Main).launch {
                     view?.let {
                         Snackbar.make(it, result, Snackbar.LENGTH_SHORT).apply {
@@ -269,7 +323,7 @@ class NoteContentFragment : Fragment(R.layout.fragment_note_content) {
                         Note(
                             0,
                             contentBinding.etTitle.text.toString(),
-                            contentBinding.etNoteContent.getMD(),
+                            contentBinding.etNoteContent.text.toString(),
                             currentDate,
                             "",
                             color,
@@ -298,16 +352,20 @@ class NoteContentFragment : Fragment(R.layout.fragment_note_content) {
 
     private fun updateNote() {
         if (note != null) {
+            val edited = if (!note!!.isEdited){
+                contentBinding.etNoteContent.text.toString()!=note!!.content || contentBinding.etTitle.text.toString()!=note!!.title
+            }else
+                true
             noteActivityViewModel.updateNote(
                 Note(
                     note!!.id,
                     contentBinding.etTitle.text.toString(),
-                    contentBinding.etNoteContent.getMD(),
+                    contentBinding.etNoteContent.text.toString(),
                     note!!.date,
                     currentDate,
                     color,
                     noteActivityViewModel.setImagePath(),
-                    contentBinding.etNoteContent.getMD()!=note!!.content
+                    edited
                 )
             )
         }
@@ -355,7 +413,7 @@ class NoteContentFragment : Fragment(R.layout.fragment_note_content) {
 
         if (note != null) {
             title.setText(note.title)
-            content.renderMD(note.content)
+            content.setText(note.content)
             if (note.edited!=""){
                 lastEdited.text = getString(R.string.created_on, note.date) +"\n"+ getString(R.string.edited_on, SimpleDateFormat.getDateInstance().format(Date()))
             }else {

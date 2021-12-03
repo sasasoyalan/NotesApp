@@ -109,25 +109,27 @@
                 android:fontFamily="@font/google_sans_medium"
                 android:hint="@string/title"
                 android:importantForAutofill="no"
-                android:inputType="none"
+                android:inputType="text"
+                android:maxLines="1"
                 android:textSize="22sp" />
 
-            <com.yahiaangelo.markdownedittext.MarkdownEditText
+            <EditText
                 android:id="@+id/etNoteContent"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="0.1"
                 android:layout_marginStart="22dp"
                 android:layout_marginTop="10dp"
                 android:layout_marginEnd="20dp"
                 android:background="@null"
+                android:gravity="start|top"
+                android:singleLine="false"
                 android:fontFamily="@font/google_sans_regular"
                 android:hint="@string/note"
-                android:importantForAutofill="no"
+                android:lines="2"
+                android:maxLines="2"
                 android:inputType="none"
                 android:paddingBottom="10dp"
-                android:textSize="16sp"
-                tools:ignore="MissingClass" />
+                android:textSize="16sp" />
 
         </LinearLayout>
 
