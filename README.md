@@ -24,6 +24,7 @@ __MVVM__ - MVVM stands for Model, View, ViewModel. MVVM is one of the architectu
 4. Search
 5. Color Picker (Colorful notes)
 5. RecyclerView Animations
+6. Visibility Animation
 
 ## Libraries Used:-
    <h4>Library used</h4>
