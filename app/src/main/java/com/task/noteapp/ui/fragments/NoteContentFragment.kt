@@ -105,7 +105,7 @@ class NoteContentFragment : Fragment(R.layout.fragment_note_content) {
             contentBinding.etNoteContent.setOnFocusChangeListener { _, hasFocus ->
                 if (hasFocus) {
                     contentBinding.bottomBar.visibility = View.VISIBLE
-                   // contentBinding.etNoteContent.setStylesBar(contentBinding.styleBar)
+                    contentBinding.etNoteContent.setStylesBar(contentBinding.styleBar)
                 } else contentBinding.bottomBar.visibility = View.GONE
             }
         } catch (e: Throwable) {
@@ -132,7 +132,7 @@ class NoteContentFragment : Fragment(R.layout.fragment_note_content) {
                 }
                 override fun afterTextChanged(s: Editable?) {
                     if (contentBinding.etNoteContent.layout.lineCount > 2){
-                        contentBinding.etNoteContent.text.delete(contentBinding.etNoteContent.text.length - 1, contentBinding.etNoteContent.text.length)
+                        contentBinding.etNoteContent.text?.delete(contentBinding.etNoteContent.text!!.length - 1, contentBinding.etNoteContent.text!!.length)
                         Snackbar.make(view, getString(R.string.max_lenght_error), Snackbar.LENGTH_SHORT).apply {
                             animationMode = Snackbar.ANIMATION_MODE_FADE
                         }.show()

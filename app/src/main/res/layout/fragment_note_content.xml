@@ -113,7 +113,7 @@
                 android:maxLines="1"
                 android:textSize="22sp" />
 
-            <EditText
+            <com.yahiaangelo.markdownedittext.MarkdownEditText
                 android:id="@+id/etNoteContent"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
