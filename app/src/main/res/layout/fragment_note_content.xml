@@ -97,39 +97,145 @@
                 android:contentDescription="@string/noteContentImage"
                 android:visibility="gone" />
 
-            <EditText
-                android:id="@+id/etTitle"
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="20dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginEnd="20dp"
-                android:layout_marginBottom="10dp"
-                android:background="@null"
-                android:fontFamily="@font/google_sans_medium"
-                android:hint="@string/title"
-                android:importantForAutofill="no"
-                android:inputType="text"
-                android:maxLines="1"
-                android:textSize="22sp" />
+                android:layout_height="wrap_content">
 
-            <com.yahiaangelo.markdownedittext.MarkdownEditText
-                android:id="@+id/etNoteContent"
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/cvTitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="10dp"
+                    app:cardCornerRadius="5dp"
+                    android:layout_marginEnd="20dp"
+                    android:layout_marginBottom="10dp"
+                    app:layout_constraintEnd_toEndOf="parent">
+
+                    <EditText
+                        android:id="@+id/etTitle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toStartOf="@+id/infoImage"
+                        android:background="@null"
+                        android:padding="5dp"
+                        android:layout_margin="5dp"
+                        android:fontFamily="@font/google_sans_medium"
+                        android:hint="@string/title"
+                        android:importantForAutofill="no"
+                        android:inputType="text"
+                        android:maxLines="1"
+                        android:textSize="22sp" />
+
+                </androidx.cardview.widget.CardView>
+
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="22dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginEnd="20dp"
-                android:background="@null"
-                android:gravity="start|top"
-                android:singleLine="false"
-                android:fontFamily="@font/google_sans_regular"
-                android:hint="@string/note"
-                android:lines="2"
-                android:maxLines="2"
-                android:inputType="none"
-                android:paddingBottom="10dp"
-                android:textSize="16sp" />
+                android:layout_height="wrap_content">
+
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/cvImgInfo"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    android:layout_marginStart="22dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginEnd="20dp"
+                    app:cardCornerRadius="5dp"
+                    android:layout_marginBottom="10dp"
+                    app:layout_constraintEnd_toEndOf="parent">
+
+                    <com.yahiaangelo.markdownedittext.MarkdownEditText
+                        android:id="@+id/etNoteContent"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="5dp"
+                        android:background="@null"
+                        android:gravity="start|top"
+                        android:singleLine="false"
+                        android:padding="5dp"
+                        android:fontFamily="@font/google_sans_regular"
+                        android:hint="@string/note"
+                        android:lines="2"
+                        android:maxLines="2"
+                        android:inputType="none"
+                        android:paddingBottom="10dp"
+                        android:textSize="16sp" />
+
+                </androidx.cardview.widget.CardView>
+
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/infoSpeech"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingEnd="40dp"
+                    app:layout_constraintTop_toBottomOf="@+id/infoImage"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    android:background="@drawable/speech_bubblle"
+                    android:paddingTop="10dp"
+                    android:visibility="gone"
+                    android:paddingStart="10dp"
+                    android:paddingBottom="10dp"
+                    android:layout_marginBottom="50dp"
+                    android:text="@string/info_text"
+                    android:textColor="@color/white"
+                    android:fontFamily="@font/google_sans_regular"
+                    app:layout_constraintEnd_toStartOf="@+id/infoImage">
+                </TextView>
+
+                <ImageView
+                    android:id="@+id/infoImage"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:src="@drawable/ic_baseline_info_24"
+                    android:clickable="true"
+                    android:layout_marginEnd="20dp"
+                    android:layout_marginTop="10dp"
+                    android:foreground="?android:attr/selectableItemBackground"
+                    android:focusable="true"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+                </ImageView>
+
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+<!--            <com.yahiaangelo.markdownedittext.MarkdownEditText-->
+<!--                android:id="@+id/etNoteContents"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginStart="22dp"-->
+<!--                android:layout_marginTop="10dp"-->
+<!--                android:visibility="gone"-->
+<!--                android:layout_marginEnd="20dp"-->
+<!--                android:background="@null"-->
+<!--                android:gravity="start|top"-->
+<!--                android:singleLine="false"-->
+<!--                android:fontFamily="@font/google_sans_regular"-->
+<!--                android:hint="@string/note"-->
+<!--                android:lines="2"-->
+<!--                android:maxLines="2"-->
+<!--                android:inputType="none"-->
+<!--                android:paddingBottom="10dp"-->
+<!--                android:textSize="16sp" />-->
 
         </LinearLayout>
 

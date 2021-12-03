@@ -6,6 +6,7 @@ import android.app.Activity.RESULT_OK
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Color
+import android.graphics.PorterDuff
 import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Bundle
@@ -84,13 +85,14 @@ class NoteContentFragment : Fragment(R.layout.fragment_note_content) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         contentBinding = FragmentNoteContentBinding.bind(view)
-
         /* Sets the unique transition name for the layout that is
          being inflated using SharedElementEnterTransition class */
         ViewCompat.setTransitionName(
             contentBinding.noteContentFragmentParent,
             "recyclerView_${args.note?.id}"
         )
+
+        showInfo()
 
         navController = Navigation.findNavController(view)
         val activity = activity as NoteActivity
@@ -99,6 +101,10 @@ class NoteContentFragment : Fragment(R.layout.fragment_note_content) {
         contentBinding.backBtn.setOnClickListener {
             requireView().hideKeyboard()
             saveNoteAndGoBack()
+        }
+
+        contentBinding.infoImage.setOnClickListener {
+            showInfo()
         }
 
         try {
@@ -131,13 +137,14 @@ class NoteContentFragment : Fragment(R.layout.fragment_note_content) {
                     }
                 }
                 override fun afterTextChanged(s: Editable?) {
-                    if (contentBinding.etNoteContent.layout.lineCount > 2){
-                        contentBinding.etNoteContent.text?.delete(contentBinding.etNoteContent.text!!.length - 1, contentBinding.etNoteContent.text!!.length)
-                        Snackbar.make(view, getString(R.string.max_lenght_error), Snackbar.LENGTH_SHORT).apply {
-                            animationMode = Snackbar.ANIMATION_MODE_FADE
-                        }.show()
+                    if(contentBinding.etNoteContent.layout!=null){
+                        if (contentBinding.etNoteContent.layout.lineCount > 2){
+                            contentBinding.etNoteContent.text?.delete(contentBinding.etNoteContent.text!!.length - 1, contentBinding.etNoteContent.text!!.length)
+                            Snackbar.make(view, getString(R.string.max_lenght_error), Snackbar.LENGTH_SHORT).apply {
+                                animationMode = Snackbar.ANIMATION_MODE_FADE
+                            }.show()
+                        }
                     }
-
                 }
             })
             contentBinding.etTitle.addTextChangedListener(object : TextWatcher {
@@ -254,6 +261,32 @@ class NoteContentFragment : Fragment(R.layout.fragment_note_content) {
                     saveNoteAndGoBack()
                 }
             })
+    }
+
+    private fun showInfo() {
+        GlobalScope.launch(Dispatchers.Main){
+            delay(500L)
+            showText()
+            delay(2500L)
+            hideText()
+        }
+    }
+
+    suspend fun showText() {
+        contentBinding.infoSpeech.animate()
+            .translationX(0F)
+            .setDuration(300)
+            .alpha(1F)
+            .start()
+        contentBinding.infoSpeech.visibility=View.VISIBLE
+    }
+
+    suspend fun hideText() {
+        contentBinding.infoSpeech.animate()
+            .translationX(contentBinding.infoSpeech.width.toFloat())
+            .alpha(0F)
+            .setDuration(300)
+            .start()
     }
 
     private fun addSharedElementListener() {

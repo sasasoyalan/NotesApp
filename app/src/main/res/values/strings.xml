@@ -34,4 +34,5 @@
     <string name="disabled_message">New Note Shortcut Disabled</string>
     <string name="delete_fab">deleteFab</string>
     <string name="max_lenght_error">Your note must have a maximum of 2 lines.</string>
+    <string name="info_text">Touch on the 3 dots above\nfor more options.</string>
 </resources>
