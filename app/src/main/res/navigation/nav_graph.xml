@@ -18,7 +18,7 @@
         android:name="com.task.noteapp.ui.fragments.NoteContentFragment"
         android:label="fragment_note_content"
         tools:layout="@layout/fragment_note_content">
-        <deepLink app:uri="notesapp://com.gamedestroyer.roomnote/addnewnote" />
+        <deepLink app:uri="notesapp://com.task.noteapp/addnewnote" />
         <action
             android:id="@+id/action_noteContentFragment_to_noteFragment"
             app:destination="@id/noteFragment"
