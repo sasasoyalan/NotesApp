@@ -1,6 +1,6 @@
-#Note-App
+### Note-App
 
-## MVVM Architecture
+## Architecture
 __MVVM__ - MVVM stands for Model, View, ViewModel. MVVM is one of the architectural patterns which enhances separation of concerns, it allows separating the user interface logic from the business (or the back-end) logic.
 
 ## Android Jetpack components:-
@@ -37,7 +37,7 @@ __MVVM__ - MVVM stands for Model, View, ViewModel. MVVM is one of the architectu
    
 </ul>
 
-#Samed-Sacid-Soyalan
+## Samed-Sacid-Soyalan
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 # NoteApp
