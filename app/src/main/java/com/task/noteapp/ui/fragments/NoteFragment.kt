@@ -1,6 +1,8 @@
 package com.task.noteapp.ui.fragments
 
 import android.annotation.SuppressLint
+import android.content.Context
+import android.content.SharedPreferences
 import android.content.res.Configuration.ORIENTATION_LANDSCAPE
 import android.content.res.Configuration.ORIENTATION_PORTRAIT
 import android.graphics.Color
@@ -19,6 +21,8 @@ import androidx.navigation.Navigation
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
+import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.task.noteapp.adapters.RvNotesAdapter
 import com.task.noteapp.databinding.FragmentNoteBinding
 import com.task.noteapp.ui.activity.NoteActivity
@@ -29,6 +33,7 @@ import com.google.android.material.snackbar.BaseTransientBottomBar
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.transition.MaterialElevationScale
 import com.task.noteapp.R
+import com.task.noteapp.databinding.BottomSheetDialog2Binding
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -42,6 +47,8 @@ class NoteFragment : Fragment(R.layout.fragment_note) {
     private lateinit var rvAdapter: RvNotesAdapter
     private lateinit var noteBinding: FragmentNoteBinding
 
+    private lateinit var editor : SharedPreferences.Editor
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -53,6 +60,7 @@ class NoteFragment : Fragment(R.layout.fragment_note) {
         }
     }
 
+    @SuppressLint("CommitPrefEdits")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         noteBinding = FragmentNoteBinding.bind(view)
@@ -175,6 +183,50 @@ class NoteFragment : Fragment(R.layout.fragment_note) {
                 else -> {
                     noteBinding.chatFabText.isVisible = true
                 }
+            }
+        }
+
+        noteBinding.noteAppOptionsMenu.setOnClickListener {
+            val bottomSheetDialog = BottomSheetDialog(
+                    requireContext(),
+                    R.style.BottomSheetDialogTheme,
+            )
+            val bottomSheetView: View = layoutInflater.inflate(
+                    R.layout.bottom_sheet_dialog_2,
+                    null,
+            )
+
+            with(bottomSheetDialog) {
+                setContentView(bottomSheetView)
+                show()
+            }
+            val bottomSheetBinding = BottomSheetDialog2Binding.bind(bottomSheetView)
+
+            editor = context?.getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)!!.edit()
+            val pref = context?.getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
+            val isShow = pref?.getBoolean("isShow",false)
+
+
+            bottomSheetBinding.apply {
+                isShowSwitch.isChecked = isShow == true
+                isShowSwitch.setOnCheckedChangeListener {buttonView, isChecked ->
+                    if (isChecked){
+                        editor.apply {
+                            putBoolean("isShow", true)
+                            apply()
+                            recyclerViewDisplay()
+                        }
+                    } else {
+                        editor.apply {
+                            putBoolean("isShow", false)
+                            apply()
+                            recyclerViewDisplay()
+                        }
+                    }
+                }
+            }
+            bottomSheetView.post {
+                bottomSheetDialog.behavior.state = BottomSheetBehavior.STATE_EXPANDED
             }
         }
     } //onViewCreated closed

@@ -1,5 +1,6 @@
 package com.task.noteapp.adapters
 
+import android.content.Context
 import android.net.Uri
 import android.view.LayoutInflater
 import android.view.View
@@ -70,6 +71,7 @@ class RvNotesAdapter : androidx.recyclerview.widget.ListAdapter<
         getItem(position).let { note ->
 
             holder.apply {
+                val pref = parent.context.getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
                 parent.transitionName = "recyclerView_${note.id}"
 
                 if (note.isEdited){
@@ -81,20 +83,8 @@ class RvNotesAdapter : androidx.recyclerview.widget.ListAdapter<
                 }
 
                 title.text = note.title
-                markWon.setMarkdown(content, note.content)
                 date.text = note.date
-                if (note.imagePath != null) {
-                    image.visibility = View.VISIBLE
-                    val uri = Uri.fromFile(File(note.imagePath))
-                    if (File(note.imagePath).exists())
-                        itemView.context.loadHiRezThumbnail(uri, image)
-                } else {
-                    Glide.with(itemView).clear(image)
-                    image.isVisible = false
-                }
-
                 parent.setCardBackgroundColor(note.color)
-
                 itemView.setOnClickListener {
                     val action = NoteFragmentDirections.actionNoteFragmentToNoteContentFragment()
                         .setNote(note)
@@ -109,6 +99,23 @@ class RvNotesAdapter : androidx.recyclerview.widget.ListAdapter<
                     it.hideKeyboard()
                     Navigation.findNavController(it).navigate(action, extras)
                 }
+
+                if (!pref.getBoolean("isShow",false)){
+                    markWon.setMarkdown(content, note.content)
+                    if (note.imagePath != null) {
+                        image.visibility = View.VISIBLE
+                        val uri = Uri.fromFile(File(note.imagePath))
+                        if (File(note.imagePath).exists())
+                            itemView.context.loadHiRezThumbnail(uri, image)
+                    } else {
+                        Glide.with(itemView).clear(image)
+                        image.isVisible = false
+                    }
+                }else {
+                    Glide.with(itemView).clear(image)
+                    image.isVisible = false
+                }
+
             }
         }
     }
